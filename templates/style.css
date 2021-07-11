@@ -1,0 +1,11 @@
+#bg {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+
+  background: linear-gradient(
+    180deg,
+    rgba(5, 164, 214, 0.3666) 0%,
+    rgba(2, 144, 189, 0.94) 58.02%
+  );
+}
