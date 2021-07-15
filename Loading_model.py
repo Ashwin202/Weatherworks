@@ -13,8 +13,7 @@ import PIL
 from PIL import Image
 import numpy as np
 
-
-
+import config as C
 
        
 def accuracy(out,labels):
@@ -57,37 +56,21 @@ class Weatherclass(nn.Module):
         return self.network(xb)
 
 
-model= Weatherclass()
-path="./Weather_model.pt"
-model.load_state_dict(torch.load(path))
+model = Weatherclass()
+model.load_state_dict(torch.load(C.MODEL_PATH))
 model.eval()
-dir="./Preprocessed_image"
-dataset=ImageFolder(dir+"/train",ToTensor())
-test_dataset=ImageFolder(dir+'/test',transform=ToTensor())
-os.getcwd()
-path='./Preprocessed_image/test/'
-pred_image_path="Preprocessed_image/test"
 
 
-os.listdir(pred_image_path)
-pic_path="/home/ashwin/Weather/Preprocessed_image/test/Cloudy/cloudy154.jpg"
-temp=os.path.dirname(pic_path)
-labels=temp.lstrip('/home/ashwin/Weather/Preprocessed_image/test/') #gives the label
 def predict_image(img, model):
-    xb=img    
-    yb = model(xb)
+    yb = model(img)
     _, preds = torch.max(yb, dim=1)    
-    if(preds==0):
-        return "Cloudy"
-    if(preds==1):
-        return "Rain"
-    if(preds==2):
-        return "Shine"
-    if(preds==3):
-        return "Sunrise"
+    return C.OUT_CLASSES[preds]
+
+
+        
 def trial(pic_path):
     img=Image.open(pic_path)
     pil_to_tensor=transform.ToTensor()(img).unsqueeze_(0)    
-    return predict_image(pil_to_tensor,model)
-trial(pic_path)
+    return predict_image(pil_to_tensor, model)
+
 
